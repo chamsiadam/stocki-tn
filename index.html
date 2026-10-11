@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B6A8D">
+<title>Stocki TN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Mise en page : en-tête fixe, contenu en une colonne (max 600px), barre de navigation en bas pour le pouce. */
+:root{
+  --bg:#F2F5F7; --surface:#FFFFFF; --surface2:#E8EEF2; --ink:#10202C; --muted:#566774; --line:#D7E0E6;
+  --brand:#0B6A8D; --brand-ink:#FFFFFF; --brand-soft:#DCEFF6;
+  --good:#17744A; --good-soft:#DDF2E7; --warn:#8F4B00; --warn-soft:#FCEFD6; --bad:#B3261E; --bad-soft:#FBE3E1;
+  --shadow:0 1px 2px rgba(16,32,44,.06),0 4px 14px rgba(16,32,44,.05);
+  --f-display:'Bricolage Grotesque','Segoe UI',Roboto,system-ui,sans-serif;
+  --f-body:'Figtree','Segoe UI',Roboto,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C151D; --surface:#14212C; --surface2:#1D2E3B; --ink:#E8F0F5; --muted:#9BADBA; --line:#27394A;
+  --brand:#55BDE0; --brand-ink:#062230; --brand-soft:#123646;
+  --good:#5FD39A; --good-soft:#12362A; --warn:#F2B85E; --warn-soft:#3A2B10; --bad:#FF8E85; --bad-soft:#40201E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C151D; --surface:#14212C; --surface2:#1D2E3B; --ink:#E8F0F5; --muted:#9BADBA; --line:#27394A;
+  --brand:#55BDE0; --brand-ink:#062230; --brand-soft:#123646;
+  --good:#5FD39A; --good-soft:#12362A; --warn:#F2B85E; --warn-soft:#3A2B10; --bad:#FF8E85; --bad-soft:#40201E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 var(--f-body);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body.lock{overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* En-tête */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:600px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.35rem;letter-spacing:-.01em}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center}
+.logo small{font:700 .7rem var(--f-body);background:var(--brand-soft);color:var(--brand);padding:3px 7px;border-radius:999px;letter-spacing:.06em}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--ink);flex:none}
+.icon-btn:active{background:var(--surface2)}
+
+main{max-width:600px;margin:0 auto;padding-inline:16px;padding-block:18px 120px}
+#view{display:flex;flex-direction:column;gap:16px;min-width:0}
+.page-head{display:flex;flex-direction:column;gap:2px}
+h1{font:700 1.6rem/1.15 var(--f-display);letter-spacing:-.015em;text-wrap:balance}
+h2{font:700 1.08rem/1.2 var(--f-display)}
+.sub{color:var(--muted);font-size:.92rem}
+.meta{color:var(--muted);font-size:.88rem}
+
+/* Navigation du bas */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav-in{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding-inline:6px}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px 9px;min-height:60px;border:0;background:none;color:var(--muted);font-size:.72rem;font-weight:600;cursor:pointer}
+.nav button .pillic{display:grid;place-items:center;width:52px;height:30px;border-radius:999px}
+.nav button.on{color:var(--brand)}
+.nav button.on .pillic{background:var(--brand-soft)}
+
+/* Boutons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border-radius:14px;border:1.5px solid var(--brand);background:var(--brand);color:var(--brand-ink);font-weight:700;cursor:pointer;text-align:center}
+.btn:active{filter:brightness(.92)}
+.btn.ghost{background:transparent;color:var(--brand)}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.sm{min-height:42px;padding:0 12px;font-size:.92rem;border-radius:12px}
+.btn.danger-t{color:var(--bad);border-color:var(--line)}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>.btn{flex:1 1 140px}
+
+/* Cartes */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);min-width:0}
+.hero{background:var(--brand);color:var(--brand-ink);border-radius:22px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.hero-top{display:flex;align-items:center;justify-content:space-between;font-weight:600;opacity:.92}
+.hero .big{font:700 2.3rem/1.1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hero-sub{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.92rem;opacity:.92}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .lbl{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-weight:600;font-size:.88rem}
+.kpi .val{font:700 1.8rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.chipic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand);flex:none}
+.chipic.warn{background:var(--warn-soft);color:var(--warn)}
+.chipic.good{background:var(--good-soft);color:var(--good)}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.pill.ok{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--brand-soft);color:var(--brand)}
+.good-t{color:var(--good)} .bad-t{color:var(--bad)}
+
+.notice{border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:.93rem}
+.notice.info{background:var(--brand-soft);color:var(--ink)}
+.notice.warn{background:var(--warn-soft);color:var(--ink)}
+.notice b{font-weight:700}
+.err{background:var(--bad-soft);color:var(--bad);padding:10px 12px;border-radius:12px;font-weight:600;font-size:.93rem}
+
+/* Listes */
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px}
+.item-main{min-width:0}
+.item h3{font:700 1.02rem/1.25 var(--f-display);overflow-wrap:anywhere}
+.prices{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:6px;font-size:.9rem;color:var(--muted)}
+.prices b{color:var(--ink);font-variant-numeric:tabular-nums}
+.item-side{align-self:start}
+.item-actions{grid-column:1/-1;display:flex;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.item-actions .btn{flex:1}
+.rows{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.ri{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.rows>.ri:first-child{border-top:0}
+.ri-main{display:flex;flex-direction:column;min-width:0}
+.ri-main b{overflow-wrap:anywhere}
+.ri-side{display:flex;flex-direction:column;align-items:flex-end;font-variant-numeric:tabular-nums}
+.ri.two{grid-template-columns:minmax(0,1fr) auto}
+.day{font-weight:700;font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;justify-content:space-between;gap:8px;padding:4px 2px 0}
+.empty{text-align:center;color:var(--muted);padding:26px 16px;background:var(--surface);border:1px dashed var(--line);border-radius:16px}
+.empty b{display:block;color:var(--ink);margin-bottom:4px;font-family:var(--f-display);font-size:1.02rem}
+
+/* Formulaires */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-weight:600;font-size:.9rem}
+.opt{font-weight:400;color:var(--muted)}
+input,select,textarea{width:100%;min-height:50px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)}
+textarea{min-height:110px;resize:vertical;font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.form{display:flex;flex-direction:column;gap:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stepper{display:flex;gap:8px}
+.stepper input{text-align:center;font-weight:700;font-size:1.1rem}
+.stepper button{width:52px;min-height:50px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;flex:none}
+.stepper button:active{background:var(--surface2)}
+.totals{background:var(--surface2);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.totals div{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.totals .t{font:700 1.35rem var(--f-display)}
+.search{position:relative}
+.search svg{position:absolute;left:14px;top:15px;color:var(--muted)}
+.search input{padding-left:44px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;cursor:pointer;font-size:.92rem}
+.chip.on{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+
+/* Rapports */
+.net{border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.net.pos{background:var(--good-soft);color:var(--good)}
+.net.neg{background:var(--bad-soft);color:var(--bad)}
+.net .big{font:700 2.1rem/1.1 var(--f-display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.net .lbl{font-weight:700}
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.92rem}
+th,td{padding:10px 12px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{border-top:0;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+
+/* Fenêtre */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(6,16,24,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:600px;max-height:92%;overflow:auto;background:var(--surface);border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;animation:up .2s ease-out}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.sheet{animation:none}}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;max-width:min(92vw,520px);background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:14px;font-weight:600;text-align:center;transition:opacity .2s,transform .2s;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.warn{background:var(--warn);color:var(--bg)}
+.toast.bad{background:var(--bad);color:var(--bg)}
+.file-btn{position:relative;overflow:hidden}
+.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;min-height:0}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="top-in">
+  <div class="logo"><span class="logo-mark"><svg class="i" viewBox="0 0 24 24"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>Stocki <small>TN</small></div>
+  <button class="icon-btn" id="btn-data" data-act="go" data-v="data" aria-label="Données et sauvegarde"><svg class="i" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></button>
+</div></header>
+<main><div id="view"></div></main>
+<nav class="nav" aria-label="Navigation principale"><div class="nav-in" id="nav"></div></nav>
+<div class="modal" id="modal" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const KEY='stocki-tn-v1';
+const CATS=['Vêtements','Chaussures','Accessoires','Autre'];
+const VIEWS=['home','products','sales','expenses','reports','data'];
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const round3=n=>Math.round((n+Number.EPSILON)*1000)/1000;
+const num=(v,d=0)=>{const n=Number(v);return Number.isFinite(n)?n:d};
+const sum=(a,f)=>round3(a.reduce((t,x)=>t+f(x),0));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf=new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:3});
+const nInt=new Intl.NumberFormat('fr-FR');
+const money=n=>nf.format(round3(n))+' DT';
+const pl=(n,a,b)=>n+' '+(n>1?b:a);
+const fold=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+const fmtInput=n=>String(n).replace('.',',');
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>ymd(new Date());
+const parts=s=>s.split('-').map(Number);
+const addDays=(s,n)=>{const [y,m,d]=parts(s);return ymd(new Date(y,m-1,d+n))};
+const isDate=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s);
+function fmtDay(s){
+  if(s===today())return 'Aujourd’hui';
+  if(s===addDays(today(),-1))return 'Hier';
+  const [y,m,d]=parts(s);
+  return new Date(y,m-1,d).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+}
+function parseNum(s){
+  s=String(s==null?'':s).trim().replace(/\s/g,'').replace(',','.');
+  if(!/^\d+(\.\d+)?$/.test(s))return NaN;
+  const n=Number(s);return n<=10000000?n:NaN;
+}
+const parseInt0=s=>/^\d{1,7}$/.test(String(s).trim())?Number(s):NaN;
+
+/* Icônes */
+const P={
+  home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+  box:'<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
+  bag:'<path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 016 0"/>',
+  wallet:'<path d="M3 7h16a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 7l12-3v3"/><circle cx="16.5" cy="13.5" r="1"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', minus:'<path d="M5 12h14"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  alert:'<path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18h.01"/>',
+  down:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>', up:'<path d="M12 20V9M7 13l5-5 5 5M5 4h14"/>',
+  copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',
+  undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/>',
+  check:'<path d="M5 12l5 5 9-10"/>'
+};
+const ic=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${P[n]}</svg>`;
+
+/* Données */
+let state, storageOK=true;
+const detail=p=>[p.size?((p.category==='Chaussures'?'Pointure ':'Taille ')+p.size):'',p.color||''].filter(Boolean).join(' · ');
+const byId=id=>state.products.find(p=>p.id===id);
+const saleTotal=s=>round3(s.qty*s.sell);
+const saleProfit=s=>round3(s.qty*(s.sell-s.buy));
+
+function normalize(s){
+  if(!s||typeof s!=='object'||!Array.isArray(s.products))throw new Error('Fichier non reconnu : la liste des produits est introuvable.');
+  const out={products:[],sales:[],expenses:[],settings:{lowStock:3,sample:false,lastBackup:0}};
+  s.products.forEach(p=>{
+    if(!p||typeof p!=='object')return;
+    const name=String(p.name||'').trim(); if(!name)return;
+    out.products.push({id:String(p.id||uid()),name:name.slice(0,80),category:CATS.includes(p.category)?p.category:'Autre',
+      buy:Math.max(0,round3(num(p.buy))),sell:Math.max(0,round3(num(p.sell))),qty:Math.max(0,Math.floor(num(p.qty))),
+      size:String(p.size||'').slice(0,30),color:String(p.color||'').slice(0,30)});
+  });
+  (Array.isArray(s.sales)?s.sales:[]).forEach(x=>{
+    if(!x||typeof x!=='object')return;
+    const qty=Math.floor(num(x.qty)); if(qty<1)return;
+    out.sales.push({id:String(x.id||uid()),date:isDate(x.date)?x.date:today(),ts:num(x.ts,0),productId:String(x.productId||''),
+      name:String(x.name||'Produit').slice(0,80),detail:String(x.detail||'').slice(0,80),qty,
+      sell:Math.max(0,round3(num(x.sell))),buy:Math.max(0,round3(num(x.buy)))});
+  });
+  (Array.isArray(s.expenses)?s.expenses:[]).forEach(x=>{
+    if(!x||typeof x!=='object')return;
+    const amount=round3(num(x.amount)); if(!(amount>0))return;
+    out.expenses.push({id:String(x.id||uid()),date:isDate(x.date)?x.date:today(),ts:num(x.ts,0),label:String(x.label||'Dépense').slice(0,80),amount});
+  });
+  const st=s.settings||{};
+  out.settings.lowStock=Math.min(999,Math.max(0,Math.floor(num(st.lowStock,3))));
+  out.settings.lastBackup=num(st.lastBackup,0);
+  return out;
+}
+function sampleData(){
+  const t=today(), now=Date.now();
+  const mk=(name,category,buy,sell,qty,size,color)=>({id:uid(),name,category,buy,sell,qty,size,color});
+  const products=[
+    mk('T-shirt coton','Vêtements',9,22,24,'M','Blanc'),
+    mk('T-shirt coton','Vêtements',9,22,2,'L','Noir'),
+    mk('Jean slim homme','Vêtements',38,75,12,'42','Bleu'),
+    mk('Robe d’été fleurie','Vêtements',28,60,6,'38','Rose'),
+    mk('Chemise en lin','Vêtements',24,49.5,9,'L','Beige'),
+    mk('Sweat à capuche','Vêtements',32,65,0,'M','Gris'),
+    mk('Baskets running','Chaussures',55,119,8,'43','Noir'),
+    mk('Sandales en cuir','Chaussures',30,69,5,'39','Marron'),
+    mk('Mocassins homme','Chaussures',48,98,3,'42','Marron'),
+    mk('Casquette','Accessoires',6,15,18,'','Bleu marine'),
+    mk('Ceinture en cuir','Accessoires',12,29,10,'','Noir')
+  ];
+  let k=0;
+  const S=(off,i,qty)=>{const p=products[i];return{id:uid(),date:addDays(t,-off),ts:now-off*86400000-(k++)*1000,productId:p.id,name:p.name,detail:detail(p),qty,sell:p.sell,buy:p.buy}};
+  const sales=[S(0,0,2),S(0,6,1),S(0,9,3),S(1,2,2),S(1,3,1),S(2,4,2),S(3,7,1),S(4,1,3),S(5,10,2),S(6,6,1)];
+  const E=(off,label,amount)=>({id:uid(),date:addDays(t,-off),ts:now-off*86400000,label,amount});
+  return{products,sales,expenses:[E(0,'Sacs et emballages',12),E(1,'Café et eau',8.5),E(3,'Transport de marchandises',25)],
+    settings:{lowStock:3,sample:true,lastBackup:0}};
+}
+function load(){
+  try{const raw=localStorage.getItem(KEY); if(raw)return normalize(JSON.parse(raw));}catch(e){}
+  try{localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');}catch(e){storageOK=false;}
+  return sampleData();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){storageOK=false;}}
+
+/* Interface commune */
+let view='home';
+const ui={search:'',cat:'Tous',saleLimit:40,sale:{pid:'',qty:'1',price:''},exp:{label:'',amount:'',date:today()},
+  rep:{preset:'7',from:addDays(today(),-6),to:today()}};
+let modalCb=null,toastT;
+function toast(msg,kind){const t=$('#toast');t.textContent=msg;t.className='toast show '+(kind||'');clearTimeout(toastT);toastT=setTimeout(()=>{t.className='toast'},3400);}
+function openModal(html,cb){$('#sheet').innerHTML=html;$('#modal').hidden=false;document.body.classList.add('lock');modalCb=cb||null;const f=$('#sheet [autofocus]');if(f)setTimeout(()=>f.focus(),60);}
+function closeModal(r){$('#modal').hidden=true;document.body.classList.remove('lock');$('#sheet').innerHTML='';const cb=modalCb;modalCb=null;if(cb)cb(!!r);}
+function confirmBox(o){
+  return new Promise(res=>openModal(`<h2>${esc(o.title)}</h2><p>${esc(o.msg)}</p>
+    <div class="row"><button class="btn ghost" data-m="no">Annuler</button><button class="btn ${o.danger?'danger':''}" data-m="yes">${esc(o.ok||'Confirmer')}</button></div>`,res));
+}
+function go(v){view=v;render();window.scrollTo(0,0);try{if(location.hash!=='#'+v)location.hash=v;}catch(e){}}
+
+/* Pages */
+const lowList=()=>state.products.filter(p=>p.qty<=state.settings.lowStock).sort((a,b)=>a.qty-b.qty||a.name.localeCompare(b.name,'fr'));
+function stockBadge(p){
+  if(p.qty===0)return '<span class="pill bad">Rupture</span>';
+  if(p.qty<=state.settings.lowStock)return `<span class="pill warn">${ic('alert').replace('class="i"','class="i" style="width:14px;height:14px"')}Faible : ${p.qty}</span>`;
+  return `<span class="pill ok">${p.qty} en stock</span>`;
+}
+function saleRow(s,withUndo){
+  const pr=saleProfit(s);
+  return `<div class="ri"><div class="ri-main"><b>${esc(s.name)}</b><span class="meta">${s.detail?esc(s.detail)+' · ':''}${s.qty} × ${money(s.sell)}</span></div>
+    <div class="ri-side"><b>${money(saleTotal(s))}</b><span class="meta ${pr<0?'bad-t':'good-t'}">${pr<0?'':'+'}${money(pr)}</span></div>
+    ${withUndo?`<button class="icon-btn" data-act="sale-cancel" data-id="${s.id}" aria-label="Annuler cette vente" title="Annuler cette vente">${ic('undo')}</button>`:'<span></span>'}</div>`;
+}
+const sortSales=a=>a.slice().sort((x,y)=>y.date.localeCompare(x.date)||y.ts-x.ts);
+
+function homeView(){
+  const t=today(), todays=state.sales.filter(s=>s.date===t);
+  const rev=sum(todays,saleTotal), prof=sum(todays,saleProfit), items=sum(todays,s=>s.qty);
+  const units=sum(state.products,p=>p.qty), low=lowList();
+  const dateTxt=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const recent=sortSales(state.sales).slice(0,5);
+  const stale=!state.settings.sample&&state.products.length>0&&(Date.now()-state.settings.lastBackup)>7*86400000;
+  return `<div class="page-head"><h1>Tableau de bord</h1><p class="sub">${esc(dateTxt.charAt(0).toUpperCase()+dateTxt.slice(1))}</p></div>
+  ${storageOK?'':`<div class="notice warn"><b>Enregistrement bloqué</b><span>Ce navigateur refuse de garder vos données. Elles seront perdues à la fermeture. Faites une sauvegarde dans « Données ».</span></div>`}
+  ${state.settings.sample?`<div class="notice info"><b>Données d’exemple</b><span>Ces produits et ventes servent à tester l’application. Effacez-les quand vous êtes prêt à saisir vos vrais produits.</span>
+    <div class="row"><button class="btn sm" data-act="clear-sample">Effacer les exemples</button><button class="btn sm ghost" data-act="hide-sample">Garder et masquer</button></div></div>`:''}
+  ${stale?`<div class="notice warn"><b>Pensez à sauvegarder</b><span>${state.settings.lastBackup?'Votre dernière sauvegarde date de plus de 7 jours.':'Vous n’avez encore fait aucune sauvegarde.'} Vos données sont uniquement sur ce téléphone.</span>
+    <div class="row"><button class="btn sm" data-act="go" data-v="data">Sauvegarder maintenant</button></div></div>`:''}
+  <div class="hero"><div class="hero-top"><span>Ventes du jour</span>${ic('bag')}</div><div class="big">${money(rev)}</div>
+    <div class="hero-sub"><span>${pl(todays.length,'vente','ventes')}</span><span>${pl(items,'article','articles')}</span><span>Bénéfice estimé : ${money(prof)}</span></div></div>
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Produits<span class="chipic">${ic('box')}</span></div><div class="val">${state.products.length}</div><span class="meta">références</span></div>
+    <div class="kpi"><div class="lbl">Unités en stock<span class="chipic good">${ic('check')}</span></div><div class="val">${nInt.format(units)}</div><span class="meta">pièces au total</span></div>
+  </div>
+  <section class="list"><div class="sec-head"><h2>Alertes de stock</h2>${low.length?`<span class="pill warn">${low.length}</span>`:''}</div>
+    ${low.length?`<div class="rows">${low.map(p=>`<button class="ri two" style="background:none;border:0;border-top:1px solid var(--line);text-align:left;cursor:pointer;width:100%" data-act="edit" data-id="${p.id}">
+        <span class="ri-main"><b>${esc(p.name)}</b><span class="meta">${esc(p.category)}${detail(p)?' · '+esc(detail(p)):''}</span></span>${stockBadge(p)}</button>`).join('').replace('border-top:1px solid var(--line);','border-top:0;')}</div>
+      <p class="meta">Touchez un produit pour mettre à jour sa quantité. Alerte quand il reste ${state.settings.lowStock} pièce${state.settings.lowStock>1?'s':''} ou moins.</p>`
+      :`<div class="empty"><b>Aucune alerte</b>Tous vos produits ont assez de stock.</div>`}
+  </section>
+  <div class="row"><button class="btn" data-act="go" data-v="sales">${ic('bag')}Nouvelle vente</button><button class="btn ghost" data-act="add">${ic('plus')}Ajouter un produit</button></div>
+  <section class="list"><div class="sec-head"><h2>Dernières ventes</h2>${state.sales.length?`<button class="btn ghost sm" data-act="go" data-v="sales">Tout voir</button>`:''}</div>
+    ${recent.length?`<div class="rows">${recent.map(s=>saleRow(s,false)).join('')}</div>`:`<div class="empty"><b>Aucune vente pour le moment</b>Enregistrez votre première vente dans l’onglet Ventes.</div>`}
+  </section>`;
+}
+
+/* Produits */
+function filteredProducts(){
+  const q=fold(ui.search);
+  return state.products.filter(p=>(ui.cat==='Tous'||p.category===ui.cat)&&(!q||fold([p.name,p.category,p.size,p.color].join(' ')).includes(q)))
+    .sort((a,b)=>a.name.localeCompare(b.name,'fr')||a.size.localeCompare(b.size,'fr',{numeric:true}));
+}
+function prodCard(p){
+  return `<article class="item"><div class="item-main"><h3>${esc(p.name)}</h3><p class="meta">${esc(p.category)}${detail(p)?' · '+esc(detail(p)):''}</p>
+    <p class="prices"><span>Achat <b>${money(p.buy)}</b></span><span>Vente <b>${money(p.sell)}</b></span></p></div>
+    <div class="item-side">${stockBadge(p)}</div>
+    <div class="item-actions"><button class="btn ghost sm" data-act="edit" data-id="${p.id}">${ic('edit')}Modifier</button><button class="btn ghost sm danger-t" data-act="del" data-id="${p.id}">${ic('trash')}Supprimer</button></div></article>`;
+}
+function productListHTML(){
+  const l=filteredProducts();
+  if(!state.products.length)return `<div class="empty"><b>Aucun produit</b>Touchez « Ajouter un produit » pour commencer.</div>`;
+  if(!l.length)return `<div class="empty"><b>Aucun résultat</b>Essayez un autre mot ou une autre catégorie.</div>`;
+  return `<p class="meta">${pl(l.length,'produit','produits')}</p><div class="list">${l.map(prodCard).join('')}</div>`;
+}
+function productsView(){
+  return `<div class="page-head"><h1>Produits</h1><p class="sub">Votre stock de vêtements et de chaussures</p></div>
+  <button class="btn block" data-act="add">${ic('plus')}Ajouter un produit</button>
+  <div class="search">${ic('search')}<input id="search" type="search" placeholder="Rechercher un produit…" value="${esc(ui.search)}" autocomplete="off" aria-label="Rechercher un produit"></div>
+  <div class="chips">${['Tous',...CATS].map(c=>`<button class="chip ${ui.cat===c?'on':''}" data-act="cat" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+  <div id="plist" style="display:flex;flex-direction:column;gap:10px">${productListHTML()}</div>`;
+}
+function openProductForm(id){
+  const p=id?byId(id):null, v=p||{name:'',category:'Vêtements',size:'',color:''};
+  openModal(`<form id="pform" class="form" novalidate data-id="${p?p.id:''}">
+    <div class="sheet-head"><h2>${p?'Modifier le produit':'Nouveau produit'}</h2><button type="button" class="icon-btn" data-m="no" aria-label="Fermer">${ic('x')}</button></div>
+    <div class="field"><label for="f-name">Nom du produit</label><input id="f-name" name="name" maxlength="80" autocomplete="off" value="${esc(v.name)}" placeholder="Ex. : Jean slim homme" autofocus></div>
+    <div class="field"><label for="f-cat">Catégorie</label><select id="f-cat" name="category">${CATS.map(c=>`<option${c===v.category?' selected':''}>${c}</option>`).join('')}</select></div>
+    <div class="grid2">
+      <div class="field"><label for="f-size">Taille / pointure <span class="opt">(facultatif)</span></label><input id="f-size" name="size" maxlength="30" autocomplete="off" value="${esc(v.size)}" placeholder="M, 42…"></div>
+      <div class="field"><label for="f-color">Couleur <span class="opt">(facultatif)</span></label><input id="f-color" name="color" maxlength="30" autocomplete="off" value="${esc(v.color)}" placeholder="Noir, bleu…"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="f-buy">Prix d’achat (DT)</label><input id="f-buy" name="buy" inputmode="decimal" autocomplete="off" value="${p?fmtInput(p.buy):''}" placeholder="0,000"></div>
+      <div class="field"><label for="f-sell">Prix de vente (DT)</label><input id="f-sell" name="sell" inputmode="decimal" autocomplete="off" value="${p?fmtInput(p.sell):''}" placeholder="0,000"></div>
+    </div>
+    <div class="field"><label for="f-qty">Quantité en stock</label><input id="f-qty" name="qty" inputmode="numeric" autocomplete="off" value="${p?p.qty:''}" placeholder="0"></div>
+    <p class="err" id="perr" hidden></p>
+    <div class="row"><button type="button" class="btn ghost" data-m="no">Annuler</button><button class="btn" type="submit">${p?'Enregistrer':'Ajouter le produit'}</button></div></form>`);
+}
+function saveProduct(form){
+  const f=new FormData(form), id=form.dataset.id;
+  const name=String(f.get('name')).trim(), category=String(f.get('category')), size=String(f.get('size')).trim(), color=String(f.get('color')).trim();
+  const buy=parseNum(f.get('buy')), sell=parseNum(f.get('sell')), qty=parseInt0(f.get('qty'));
+  let e='';
+  if(!name)e='Écrivez le nom du produit.';
+  else if(isNaN(buy))e='Le prix d’achat est invalide. Écrivez un nombre, par exemple 25 ou 25,5.';
+  else if(isNaN(sell))e='Le prix de vente est invalide. Écrivez un nombre, par exemple 49 ou 49,9.';
+  else if(isNaN(qty))e='La quantité doit être un nombre entier, par exemple 12 (0 si le produit est épuisé).';
+  else if(state.products.some(x=>x.id!==id&&fold(x.name)===fold(name)&&fold(x.size)===fold(size)&&fold(x.color)===fold(color)))
+    e='Ce produit existe déjà avec la même taille et la même couleur. Modifiez plutôt sa quantité.';
+  if(e){const el=$('#perr');el.textContent=e;el.hidden=false;return;}
+  const data={name,category,size,color,buy:round3(buy),sell:round3(sell),qty};
+  if(id){Object.assign(byId(id),data);}else state.products.push(Object.assign({id:uid()},data));
+  state.settings.sample=state.settings.sample;
+  save();closeModal();render();
+  if(sell<buy)toast('Produit enregistré. Attention : le prix de vente est plus bas que le prix d’achat.','warn');
+  else toast(id?'Produit modifié':'Produit ajouté');
+}
+async function deleteProduct(id){
+  const p=byId(id);if(!p)return;
+  const ok=await confirmBox({title:'Supprimer ce produit ?',msg:`« ${p.name} » sera retiré du stock. Les ventes déjà enregistrées restent dans l’historique.`,ok:'Supprimer',danger:true});
+  if(!ok)return;
+  state.products=state.products.filter(x=>x.id!==id);save();render();toast('Produit supprimé');
+}
+
+/* Ventes */
+function saleCalc(){
+  const p=byId(ui.sale.pid), q=parseInt0(ui.sale.qty), pr=parseNum(ui.sale.price);
+  if(!p||!(q>=1)||isNaN(pr))return null;
+  return{p,q,pr,total:round3(q*pr),profit:round3(q*(pr-p.buy))};
+}
+function updateSaleCalc(){
+  const c=saleCalc(),p=byId(ui.sale.pid);
+  const set=(id,t)=>{const el=$('#'+id);if(el)el.textContent=t};
+  set('saleTotal',c?money(c.total):'—');
+  set('saleProfit',c?money(c.profit):'—');
+  set('saleStock',p?`En stock : ${p.qty}`:'');
+  const pe=$('#saleProfit');if(pe)pe.className=c&&c.profit<0?'bad-t':'good-t';
+}
+function salesView(){
+  const avail=state.products.filter(p=>p.qty>0).sort((a,b)=>a.name.localeCompare(b.name,'fr')||a.size.localeCompare(b.size,'fr',{numeric:true}));
+  if(!avail.find(p=>p.id===ui.sale.pid)){
+    const p=avail[0];ui.sale={pid:p?p.id:'',qty:'1',price:p?fmtInput(p.sell):''};
+  }
+  const all=sortSales(state.sales), shown=all.slice(0,ui.saleLimit);
+  let hist='';
+  if(!all.length)hist=`<div class="empty"><b>Aucune vente</b>Les ventes enregistrées apparaîtront ici.</div>`;
+  else{
+    const g=new Map();shown.forEach(s=>{if(!g.has(s.date))g.set(s.date,[]);g.get(s.date).push(s)});
+    hist=[...g].map(([d,l])=>`<div class="day"><span>${esc(fmtDay(d))}</span><span class="num">${money(sum(l,saleTotal))}</span></div><div class="rows">${l.map(s=>saleRow(s,true)).join('')}</div>`).join('');
+    if(all.length>shown.length)hist+=`<button class="btn ghost block" data-act="more-sales">Afficher plus de ventes</button>`;
+  }
+  return `<div class="page-head"><h1>Ventes</h1><p class="sub">Le stock diminue automatiquement</p></div>
+  <section class="card"><h2 style="margin-bottom:12px">Nouvelle vente</h2>
+  ${avail.length?`<div class="form">
+    <div class="field"><label for="saleProduct">Produit</label><select id="saleProduct">${avail.map(p=>`<option value="${p.id}"${p.id===ui.sale.pid?' selected':''}>${esc(p.name)}${detail(p)?' — '+esc(detail(p)):''} (${p.qty})</option>`).join('')}</select>
+      <span class="meta" id="saleStock"></span></div>
+    <div class="grid2">
+      <div class="field"><label for="saleQty">Quantité</label><div class="stepper"><button type="button" data-act="qty-" aria-label="Moins">${ic('minus')}</button><input id="saleQty" inputmode="numeric" value="${esc(ui.sale.qty)}" autocomplete="off"><button type="button" data-act="qty+" aria-label="Plus">${ic('plus')}</button></div></div>
+      <div class="field"><label for="salePrice">Prix unitaire (DT)</label><input id="salePrice" inputmode="decimal" value="${esc(ui.sale.price)}" autocomplete="off"></div>
+    </div>
+    <div class="totals"><div><span>Total de la vente</span><span class="t" id="saleTotal">—</span></div><div><span>Bénéfice estimé</span><b id="saleProfit">—</b></div></div>
+    <p class="err" id="saleErr" hidden></p>
+    <button class="btn block" data-act="sale-save">${ic('check')}Enregistrer la vente</button></div>`
+  :`<div class="empty"><b>Aucun produit en stock</b>Ajoutez des produits ou mettez à jour leurs quantités pour vendre.</div>
+    <div class="row" style="margin-top:12px"><button class="btn" data-act="go" data-v="products">Aller aux produits</button></div>`}
+  </section>
+  <section class="list"><h2>Historique des ventes</h2>${hist}</section>`;
+}
+function saveSale(){
+  const err=m=>{const el=$('#saleErr');el.textContent=m;el.hidden=false};
+  const p=byId(ui.sale.pid),q=parseInt0(ui.sale.qty),pr=parseNum(ui.sale.price);
+  if(!p)return err('Choisissez un produit.');
+  if(!(q>=1))return err('La quantité doit être un nombre entier d’au moins 1.');
+  if(q>p.qty)return err(`Stock insuffisant : il reste seulement ${pl(p.qty,'pièce','pièces')} de ce produit.`);
+  if(isNaN(pr))return err('Le prix unitaire est invalide. Écrivez un nombre, par exemple 45 ou 45,5.');
+  p.qty-=q;
+  state.sales.push({id:uid(),date:today(),ts:Date.now(),productId:p.id,name:p.name,detail:detail(p),qty:q,sell:round3(pr),buy:p.buy});
+  save();
+  const total=round3(q*pr);
+  ui.sale={pid:'',qty:'1',price:''};
+  render();
+  toast(`Vente enregistrée : ${money(total)}`+(p.qty===0?' · Produit épuisé':p.qty<=state.settings.lowStock?` · Il ne reste que ${p.qty}`:''), p.qty<=state.settings.lowStock?'warn':'');
+}
+async function cancelSale(id){
+  const s=state.sales.find(x=>x.id===id);if(!s)return;
+  const p=byId(s.productId);
+  const ok=await confirmBox({title:'Annuler cette vente ?',msg:`${s.qty} × ${s.name} (${money(saleTotal(s))}). `+(p?'Les pièces seront remises en stock.':'Ce produit n’existe plus : le stock ne sera pas modifié.'),ok:'Annuler la vente',danger:true});
+  if(!ok)return;
+  if(p)p.qty+=s.qty;
+  state.sales=state.sales.filter(x=>x.id!==id);save();render();toast('Vente annulée');
+}
+
+/* Dépenses */
+function expensesView(){
+  const t=today(),mo=t.slice(0,7);
+  const todayTot=sum(state.expenses.filter(e=>e.date===t),e=>e.amount), monthTot=sum(state.expenses.filter(e=>e.date.slice(0,7)===mo),e=>e.amount);
+  const all=state.expenses.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
+  let list='';
+  if(!all.length)list=`<div class="empty"><b>Aucune dépense</b>Notez ici le loyer, le transport, le café, les sacs…</div>`;
+  else{
+    const g=new Map();all.forEach(e=>{if(!g.has(e.date))g.set(e.date,[]);g.get(e.date).push(e)});
+    list=[...g].map(([d,l])=>`<div class="day"><span>${esc(fmtDay(d))}</span><span class="num">${money(sum(l,e=>e.amount))}</span></div>
+      <div class="rows">${l.map(e=>`<div class="ri"><div class="ri-main"><b>${esc(e.label)}</b></div><b class="num">${money(e.amount)}</b><button class="icon-btn" data-act="exp-del" data-id="${e.id}" aria-label="Supprimer cette dépense">${ic('trash')}</button></div>`).join('')}</div>`).join('');
+  }
+  return `<div class="page-head"><h1>Dépenses</h1><p class="sub">Les frais de votre boutique</p></div>
+  <div class="kpis"><div class="kpi"><div class="lbl">Aujourd’hui</div><div class="val" style="font-size:1.3rem">${money(todayTot)}</div></div>
+  <div class="kpi"><div class="lbl">Ce mois-ci</div><div class="val" style="font-size:1.3rem">${money(monthTot)}</div></div></div>
+  <section class="card"><h2 style="margin-bottom:12px">Nouvelle dépense</h2><div class="form">
+    <div class="field"><label for="expLabel">Description</label><input id="expLabel" maxlength="80" autocomplete="off" placeholder="Ex. : Loyer, transport, café…" value="${esc(ui.exp.label)}"></div>
+    <div class="grid2"><div class="field"><label for="expAmount">Montant (DT)</label><input id="expAmount" inputmode="decimal" autocomplete="off" placeholder="0,000" value="${esc(ui.exp.amount)}"></div>
+    <div class="field"><label for="expDate">Date</label><input id="expDate" type="date" value="${esc(ui.exp.date)}"></div></div>
+    <p class="err" id="expErr" hidden></p>
+    <button class="btn block" data-act="exp-save">${ic('plus')}Enregistrer la dépense</button></div></section>
+  <section class="list"><h2>Historique des dépenses</h2>${list}</section>`;
+}
+function saveExpense(){
+  const err=m=>{const el=$('#expErr');el.textContent=m;el.hidden=false};
+  const label=ui.exp.label.trim(),amount=parseNum(ui.exp.amount);
+  if(!label)return err('Écrivez une description, par exemple « Loyer ».');
+  if(isNaN(amount)||amount<=0)return err('Le montant doit être un nombre plus grand que 0, par exemple 12 ou 12,5.');
+  if(!isDate(ui.exp.date))return err('Choisissez une date valide.');
+  state.expenses.push({id:uid(),date:ui.exp.date,ts:Date.now(),label,amount:round3(amount)});
+  save();ui.exp={label:'',amount:'',date:today()};render();toast('Dépense enregistrée');
+}
+async function deleteExpense(id){
+  const e=state.expenses.find(x=>x.id===id);if(!e)return;
+  const ok=await confirmBox({title:'Supprimer cette dépense ?',msg:`${e.label} : ${money(e.amount)}`,ok:'Supprimer',danger:true});
+  if(!ok)return;state.expenses=state.expenses.filter(x=>x.id!==id);save();render();toast('Dépense supprimée');
+}
+
+/* Rapports */
+function setPreset(k){
+  const t=today();ui.rep.preset=k;
+  if(k==='today'){ui.rep.from=t;ui.rep.to=t}
+  else if(k==='7'){ui.rep.from=addDays(t,-6);ui.rep.to=t}
+  else if(k==='30'){ui.rep.from=addDays(t,-29);ui.rep.to=t}
+  else if(k==='month'){ui.rep.from=t.slice(0,8)+'01';ui.rep.to=t}
+  else{ui.rep.from='';ui.rep.to=''}
+}
+function reportsView(){
+  const {from,to}=ui.rep, bad=from&&to&&from>to;
+  const inR=d=>(!from||d>=from)&&(!to||d<=to);
+  const sales=bad?[]:state.sales.filter(s=>inR(s.date)), exps=bad?[]:state.expenses.filter(e=>inR(e.date));
+  const rev=sum(sales,saleTotal), cost=sum(sales,s=>round3(s.qty*s.buy)), margin=round3(rev-cost), exp=sum(exps,e=>e.amount), net=round3(margin-exp), items=sum(sales,s=>s.qty);
+  const top=new Map();sales.forEach(s=>{const k=s.name+'|'+s.detail;const o=top.get(k)||{name:s.name,detail:s.detail,qty:0,rev:0};o.qty+=s.qty;o.rev=round3(o.rev+saleTotal(s));top.set(k,o)});
+  const topL=[...top.values()].sort((a,b)=>b.qty-a.qty||b.rev-a.rev).slice(0,5);
+  const days=new Map();
+  sales.forEach(s=>{const o=days.get(s.date)||{r:0,m:0,e:0};o.r=round3(o.r+saleTotal(s));o.m=round3(o.m+saleProfit(s));days.set(s.date,o)});
+  exps.forEach(e=>{const o=days.get(e.date)||{r:0,m:0,e:0};o.e=round3(o.e+e.amount);days.set(e.date,o)});
+  const dl=[...days].sort((a,b)=>b[0].localeCompare(a[0]));
+  const presets=[['today','Aujourd’hui'],['7','7 jours'],['30','30 jours'],['month','Ce mois'],['all','Tout']];
+  return `<div class="page-head"><h1>Rapports</h1><p class="sub">Ventes, dépenses et bénéfice</p></div>
+  <section class="card"><div class="form"><div class="chips">${presets.map(([k,l])=>`<button class="chip ${ui.rep.preset===k?'on':''}" data-act="preset" data-k="${k}">${l}</button>`).join('')}</div>
+    <div class="grid2"><div class="field"><label for="repFrom">Du</label><input id="repFrom" type="date" value="${esc(from)}"></div><div class="field"><label for="repTo">Au</label><input id="repTo" type="date" value="${esc(to)}"></div></div>
+    ${bad?'<p class="err">La date de début doit être avant la date de fin.</p>':''}</div></section>
+  <div class="net ${net<0?'neg':'pos'}"><span class="lbl">Bénéfice estimé</span><span class="big">${money(net)}</span><span style="font-size:.88rem">Marge sur les ventes moins les dépenses</span></div>
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Total des ventes</div><div class="val" style="font-size:1.35rem">${money(rev)}</div><span class="meta">${pl(items,'article vendu','articles vendus')}</span></div>
+    <div class="kpi"><div class="lbl">Total des dépenses</div><div class="val" style="font-size:1.35rem">${money(exp)}</div><span class="meta">${pl(exps.length,'dépense','dépenses')}</span></div>
+    <div class="kpi"><div class="lbl">Coût d’achat</div><div class="val" style="font-size:1.35rem">${money(cost)}</div><span class="meta">des articles vendus</span></div>
+    <div class="kpi"><div class="lbl">Marge sur ventes</div><div class="val" style="font-size:1.35rem">${money(margin)}</div><span class="meta">avant dépenses</span></div>
+  </div>
+  <section class="list"><h2>Produits les plus vendus</h2>
+    ${topL.length?`<div class="rows">${topL.map(o=>`<div class="ri two"><div class="ri-main"><b>${esc(o.name)}</b><span class="meta">${o.detail?esc(o.detail)+' · ':''}${pl(o.qty,'vendu','vendus')}</span></div><b class="num">${money(o.rev)}</b></div>`).join('')}</div>`:`<div class="empty">Aucune vente sur cette période.</div>`}
+  </section>
+  <section class="list"><h2>Détail par jour</h2>
+    ${dl.length?`<div class="tbl-wrap"><table><thead><tr><th>Jour</th><th>Ventes</th><th>Dépenses</th><th>Bénéfice</th></tr></thead><tbody>${dl.map(([d,o])=>{const b=round3(o.m-o.e);return `<tr><td>${esc(fmtDay(d))}</td><td>${money(o.r)}</td><td>${money(o.e)}</td><td class="${b<0?'bad-t':'good-t'}"><b>${money(b)}</b></td></tr>`}).join('')}</tbody></table></div>`:`<div class="empty">Rien à afficher sur cette période.</div>`}
+    <p class="meta">Bénéfice estimé = ventes − coût d’achat des articles vendus − dépenses. Il ne tient pas compte des impôts ni des autres charges.</p>
+  </section>`;
+}
+
+/* Données et sauvegarde */
+function exportJSON(){
+  return JSON.stringify({app:'stocki-tn',version:1,exportedAt:new Date().toISOString(),products:state.products,sales:state.sales,expenses:state.expenses,settings:state.settings},null,2);
+}
+function dataView(){
+  const lb=state.settings.lastBackup?new Date(state.settings.lastBackup).toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'jamais';
+  return `<div class="page-head"><h1>Données et sauvegarde</h1><p class="sub">Dernière sauvegarde : ${esc(lb)}</p></div>
+  <div class="notice warn"><b>Où sont vos données ?</b><span>Stocki TN garde tout dans la mémoire de ce navigateur, sur cet appareil seulement. Ce n’est pas un stockage en ligne sécurisé et il n’y a pas de synchronisation entre téléphones. Si vous videz les données du navigateur, tout disparaît. Faites une sauvegarde régulièrement et gardez le fichier en lieu sûr (Google Drive, WhatsApp à vous-même, e-mail…).</span></div>
+  <section class="card form"><h2>Sauvegarder</h2>
+    <button class="btn block" data-act="export-dl">${ic('down')}Télécharger la sauvegarde (.json)</button>
+    <button class="btn ghost block" data-act="export-copy">${ic('copy')}Copier le texte de la sauvegarde</button>
+    <div class="field" id="exportBoxWrap" hidden><label for="exportBox">Texte de la sauvegarde (sélectionnez et copiez)</label><textarea id="exportBox" readonly></textarea></div>
+    <p class="meta">Si le téléchargement ne démarre pas, utilisez « Copier le texte » et collez-le dans une note ou un message.</p></section>
+  <section class="card form"><h2>Restaurer</h2>
+    <label class="btn ghost block file-btn">${ic('up')}Choisir un fichier de sauvegarde<input id="impfile" type="file" accept=".json,application/json,text/plain"></label>
+    <div class="field"><label for="impText">Ou collez le texte de la sauvegarde</label><textarea id="impText" placeholder="{ &quot;app&quot;: &quot;stocki-tn&quot;, … }"></textarea></div>
+    <p class="err" id="impErr" hidden></p>
+    <button class="btn block" data-act="import-paste">Restaurer depuis le texte</button>
+    <p class="meta">La restauration remplace toutes les données actuelles.</p></section>
+  <section class="card form"><h2>Réglages</h2>
+    <div class="field"><label for="thr">Alerte de stock faible à partir de (pièces restantes)</label><input id="thr" inputmode="numeric" value="${state.settings.lowStock}"></div>
+    <p class="err" id="thrErr" hidden></p>
+    <button class="btn ghost block" data-act="save-thr">Enregistrer le réglage</button></section>
+  <section class="card form"><h2>Zone sensible</h2>
+    <button class="btn ghost block" data-act="reset-sample">Remettre les données d’exemple</button>
+    <button class="btn danger block" data-act="wipe">${ic('trash')}Tout effacer</button></section>`;
+}
+async function backupMarked(){state.settings.lastBackup=Date.now();save();}
+function downloadBackup(){
+  try{
+    const blob=new Blob([exportJSON()],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='stocki-tn-sauvegarde-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+  }catch(e){}
+  backupMarked();
+  toast('Téléchargement lancé. Vérifiez vos téléchargements. Sinon, utilisez « Copier le texte ».');
+}
+async function copyBackup(){
+  const text=exportJSON(),wrap=$('#exportBoxWrap'),box=$('#exportBox');
+  box.value=text;wrap.hidden=false;
+  let ok=false;
+  try{await navigator.clipboard.writeText(text);ok=true;}catch(e){}
+  if(!ok){box.focus();box.select();try{ok=document.execCommand('copy');}catch(e){}}
+  if(ok){backupMarked();toast('Texte copié. Collez-le dans une note ou un message.');}
+  else{box.focus();box.select();toast('Copie impossible ici. Le texte est sélectionné : copiez-le à la main.','warn');}
+}
+async function doImport(text){
+  const err=$('#impErr');
+  if(err)err.hidden=true;
+  const fail=m=>{if(err){err.textContent=m;err.hidden=false}toast(m,'bad')};
+  let data;
+  try{data=normalize(JSON.parse(text));}catch(e){return fail(e instanceof SyntaxError?'Ce texte n’est pas une sauvegarde valide.':e.message);}
+  const ok=await confirmBox({title:'Remplacer les données ?',msg:`Cette sauvegarde contient ${pl(data.products.length,'produit','produits')}, ${pl(data.sales.length,'vente','ventes')} et ${pl(data.expenses.length,'dépense','dépenses')}. Les données actuelles seront remplacées.`,ok:'Restaurer',danger:true});
+  if(!ok)return;
+  state=data;save();ui.sale={pid:'',qty:'1',price:''};render();toast('Sauvegarde restaurée');
+}
+
+const views={home:homeView,products:productsView,sales:salesView,expenses:expensesView,reports:reportsView,data:dataView};
+const NAV=[['home','Accueil','home'],['products','Produits','box'],['sales','Ventes','bag'],['expenses','Dépenses','wallet'],['reports','Rapports','chart']];
+function render(){
+  $('#view').innerHTML=views[view]();
+  $('#nav').innerHTML=NAV.map(([v,l,i])=>`<button data-act="go" data-v="${v}" class="${view===v?'on':''}" ${view===v?'aria-current="page"':''}><span class="pillic">${ic(i)}</span>${l}</button>`).join('');
+  if(view==='sales')updateSaleCalc();
+}
+
+/* Événements */
+document.addEventListener('click',async e=>{
+  const m=e.target.closest('[data-m]');
+  if(m){closeModal(m.dataset.m==='yes');return;}
+  if(e.target.id==='modal'){closeModal(false);return;}
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const a=b.dataset.act,id=b.dataset.id;
+  switch(a){
+    case 'go':go(b.dataset.v);break;
+    case 'add':openProductForm();break;
+    case 'edit':openProductForm(id);break;
+    case 'del':deleteProduct(id);break;
+    case 'cat':ui.cat=b.dataset.c;render();break;
+    case 'qty-':case 'qty+':{
+      const p=byId(ui.sale.pid),cur=parseInt0(ui.sale.qty);let n=isNaN(cur)?1:cur;
+      n+=a==='qty+'?1:-1;n=Math.max(1,p?Math.min(n,p.qty):n);
+      ui.sale.qty=String(n);$('#saleQty').value=n;updateSaleCalc();break;}
+    case 'sale-save':saveSale();break;
+    case 'sale-cancel':cancelSale(id);break;
+    case 'more-sales':ui.saleLimit+=40;render();break;
+    case 'exp-save':saveExpense();break;
+    case 'exp-del':deleteExpense(id);break;
+    case 'preset':setPreset(b.dataset.k);render();break;
+    case 'export-dl':downloadBackup();if(view==='data')render();break;
+    case 'export-copy':await copyBackup();break;
+    case 'import-paste':{const t=$('#impText').value.trim();if(!t){const el=$('#impErr');el.textContent='Collez d’abord le texte de la sauvegarde.';el.hidden=false;break;}doImport(t);break;}
+    case 'save-thr':{
+      const n=parseInt0($('#thr').value),el=$('#thrErr');
+      if(isNaN(n)||n>999){el.textContent='Écrivez un nombre entier entre 0 et 999.';el.hidden=false;break;}
+      state.settings.lowStock=n;save();render();toast('Réglage enregistré');break;}
+    case 'reset-sample':{
+      if(await confirmBox({title:'Remettre les données d’exemple ?',msg:'Vos données actuelles seront remplacées par les produits d’exemple. Faites d’abord une sauvegarde si besoin.',ok:'Remettre',danger:true})){
+        state=sampleData();save();render();toast('Données d’exemple remises');}break;}
+    case 'wipe':{
+      if(await confirmBox({title:'Tout effacer ?',msg:'Tous les produits, ventes et dépenses de cet appareil seront supprimés. Cette action est définitive. Faites d’abord une sauvegarde.',ok:'Tout effacer',danger:true})){
+        state={products:[],sales:[],expenses:[],settings:{lowStock:state.settings.lowStock,sample:false,lastBackup:state.settings.lastBackup}};save();render();toast('Toutes les données sont effacées');}break;}
+    case 'clear-sample':{
+      if(await confirmBox({title:'Effacer les exemples ?',msg:'Les produits, ventes et dépenses d’exemple seront supprimés. Vous pourrez saisir vos propres produits.',ok:'Effacer',danger:true})){
+        state={products:[],sales:[],expenses:[],settings:{lowStock:state.settings.lowStock,sample:false,lastBackup:state.settings.lastBackup}};save();render();toast('Exemples effacés. Ajoutez votre premier produit !');}break;}
+    case 'hide-sample':state.settings.sample=false;save();render();break;
+  }
+});
+document.addEventListener('submit',e=>{
+  if(e.target.id==='pform'){e.preventDefault();saveProduct(e.target);}
+});
+function onInput(e){
+  const id=e.target.id;
+  if(id==='search'){ui.search=e.target.value;$('#plist').innerHTML=productListHTML();}
+  else if(id==='saleProduct'){const p=byId(e.target.value);if(!p||ui.sale.pid===p.id)return;ui.sale={pid:p.id,qty:'1',price:fmtInput(p.sell)};$('#saleQty').value='1';$('#salePrice').value=ui.sale.price;updateSaleCalc();}
+  else if(id==='saleQty'){ui.sale.qty=e.target.value;updateSaleCalc();}
+  else if(id==='salePrice'){ui.sale.price=e.target.value;updateSaleCalc();}
+  else if(id==='expLabel')ui.exp.label=e.target.value;
+  else if(id==='expAmount')ui.exp.amount=e.target.value;
+  else if(id==='expDate')ui.exp.date=e.target.value;
+  else if((id==='repFrom'||id==='repTo')&&e.type==='change'){ui.rep.preset='custom';ui.rep[id==='repFrom'?'from':'to']=e.target.value;render();}
+}
+document.addEventListener('input',onInput);
+document.addEventListener('change',e=>{
+  if(['saleProduct','repFrom','repTo','expDate'].includes(e.target.id))onInput(e);
+  if(e.target.id==='impfile'){
+    const f=e.target.files&&e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{doImport(String(r.result));e.target.value='';};
+    r.onerror=()=>{toast('Impossible de lire ce fichier.','bad');};
+    r.readAsText(f);
+  }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal(false);});
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(VIEWS.includes(h)&&h!==view){view=h;render();window.scrollTo(0,0);}});
+
+state=load();
+try{const h=location.hash.slice(1);if(VIEWS.includes(h))view=h;}catch(e){}
+save();
+render();
+})();
+</script>
+
+</body>
+</html>
